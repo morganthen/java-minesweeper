@@ -2,7 +2,7 @@ package board;
 
 public class Board {
 
-    private Cell[][] grid = new Cell[10][10]; //new array of TYPE cell duhhh (no cell obejct has been created YET!!!)
+    private Cell[][] grid = new Cell[10][10]; //new array of TYPE cell duhhh (no cell object has been created YET!!!)
 
     public Board(){
         for (int r = 0; r < 10; r++){
@@ -27,13 +27,9 @@ public class Board {
                 grid[row][col].setMine(true);
             
         }
-
-
     }
 
     public void calculateAdjacentMines(){
-
-        
         for (int r = 0; r < 10; r++){
             for (int c = 0; c < 10; c++){
                 if (grid[r][c].isMine()) continue;
@@ -58,7 +54,11 @@ public class Board {
         
     }
 
-
+    public boolean reveal(int row, int col){
+        if (grid[row][col].isRevealed()) return false;
+        grid[row][col].setRevealed(true);
+        return grid[row][col].isMine();
+    }
 
 
     public Cell[][] getGrid() {
