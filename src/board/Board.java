@@ -50,16 +50,15 @@ public class Board {
             }
 
         }
-
         
     }
 
+    //crazy s*** about to happen here
     public boolean reveal(int row, int col){
         if (grid[row][col].isRevealed()) return false;
         grid[row][col].setRevealed(true);
         return grid[row][col].isMine();
     }
-
 
     public Cell[][] getGrid() {
         return grid;
