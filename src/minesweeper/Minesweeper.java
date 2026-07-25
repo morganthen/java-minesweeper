@@ -68,10 +68,15 @@ public class Minesweeper {
                 int row = this.scanner.nextInt() - 1;
                 System.out.println("Select column");
                 int col = this.scanner.nextInt() - 1;
-                if(board.reveal(row, col)){
-                    System.out.println("BOOM YOU LOSE!");
+                board.reveal(row, col);
+
+                if(board.isMineAt(row, col)){
+                    System.out.println("Boom! YOU LOSE!");
+                    renderBoard();
                     break;
-                };
+                }
+                 
+               
                 if(checkWin()){
                     renderBoard();
                     System.out.println("YOU WIN!");
