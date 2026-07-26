@@ -1,88 +1,129 @@
 package minesweeper;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import board.Board;
 import board.Cell;
+
+import util.Color;
 
 public class Minesweeper {
 
     Board board;
     Scanner scanner;
 
-    public Minesweeper(){
+    public Minesweeper() {
         this.board = new Board();
         this.scanner = new Scanner(System.in);
     }
 
-    public void renderBoard(){
-            Cell[][] grid = this.board.getGrid();
-            for (int r = 0; r <= 10; r++){
-                for(int c = 0; c < 10 ; c++){
-                    if (r == 10){
-                        System.out.print(" - ");
-                    }else{
-                        if (!grid[r][c].isRevealed()){
-                            System.out.print("[.]");   
-                        }else if (grid[r][c].isMine()){
-                            System.out.print("[*]");
-                        }else{
-                            int count = grid[r][c].getAdjacentMines();
-                            if(count == 0){ 
-                                System.out.print("[ ]");
-                            }else{
-                                System.out.print("[" + count + "]");
-                            }
-                        }
+    public void renderBoard() {
+        Cell[][] grid = this.board.getGrid();
+        for (int r = 0; r < 10; r++) {
+            for (int c = 0; c < 10; c++) {
+                if (!grid[r][c].isRevealed()) {
+                    System.out.print("\u25FC" + " ");
+                } else if (grid[r][c].isMine()) {
+                    System.out.print(Color.RED + "* " + Color.RESET);
+                } else {
+                    int count = grid[r][c].getAdjacentMines();
+                    switch (count) {
+                        case 0:
+                            System.out.print(Color.GREY + "\u00B7" + " " + Color.RESET);
+                            break;
+                        case 1:
+                            System.out.print(Color.GREEN.toString() + count + " " + Color.RESET);
+                            break;
+                        case 2:
+                            System.out.print(Color.ORANGE.toString() + count + " " + Color.RESET);
+                            break;
+                        default:
+                            System.out.print(Color.RED.toString() + count + " " + Color.RESET);
+                            break;
                     }
                 }
-                if(r < 10){
-                    System.out.print("| " + (r+1));
-                }
-                System.out.println();
             }
-            System.out.println(" 1  2  3  4  5  6  7  8  9  10 ");
+            if (r < 10) {
+                System.out.print(Color.GREY.toString() + "| " + (r + 1) + Color.RESET);
+            }
+            System.out.println();
+        }
+        System.out.println(Color.GREY.toString() + "1 2 3 4 5 6 7 8 9 10" + Color.RESET);
+    }
+
+    public boolean checkWin() {
+        int revealedCount = 0;
+        Cell[][] grid = this.board.getGrid();
+        for (int r = 0; r < 10; r++) {
+            for (int c = 0; c < 10; c++) {
+                if (grid[r][c].isRevealed())
+                    revealedCount++;
+            }
         }
 
-        public boolean checkWin(){
-            int revealedCount = 0;
-            Cell[][] grid = this.board.getGrid();
-            for (int r = 0 ; r < 10; r++){
-                for (int c= 0; c < 10 ; c++){
-                    if(grid[r][c].isRevealed()) revealedCount++;
+        return revealedCount == 90;
+
+    }
+
+    public void start() {
+        System.out.println(Color.GREEN.toString() + "WELCOME TO MINESWEEPER!" + Color.RESET);
+        System.out.println(Color.GREEN.toString() + "LET'S PLAY!" + Color.RESET);
+
+        while (true) {
+            renderBoard();
+            System.out.println(Color.GREEN.toString() + "Select row" + Color.RESET);
+
+            int row;
+
+            while (true) {
+                try {
+                    row = this.scanner.nextInt() - 1;
+                    if (row >= 10 || row < 0) {
+                        System.out.println(Color.RED.toString() + "Enter 1-10." + Color.RESET);
+                        continue;
+                    }
+                    break;
+                } catch (InputMismatchException e) {
+                    this.scanner.nextLine();
+                    System.out.println(Color.RED.toString() + "You need to enter a number" + Color.RESET);
                 }
             }
 
-            return revealedCount == 90;
+            int col;
 
+            while (true) {
+                try {
+                    System.out.println(Color.GREEN.toString() + "Select column" + Color.RESET);
+                    col = this.scanner.nextInt() - 1;
+                    if (col >= 10 || col < 0) {
+                        System.out.println(Color.RED.toString() + "Enter 1-10." + Color.RESET);
+                        continue;
+                    }
+                    break;
+                } catch (InputMismatchException e) {
+                    this.scanner.nextLine();
+                    System.out.println(Color.RED.toString() + "You need to enter a number" + Color.RESET);
+                }
+            }
 
-        }
+            board.reveal(row, col);
 
-        public void start(){
-            System.out.println("WELCOME TO MINESWEEPER!");
-            System.out.println("LET'S PLAY!");
-            // game loop starts here
-            while(true){
+            if (board.isMineAt(row, col)) {
                 renderBoard();
-                System.out.println("Select row");
-                int row = this.scanner.nextInt() - 1;
-                System.out.println("Select column");
-                int col = this.scanner.nextInt() - 1;
-                if(board.reveal(row, col)){
-                    System.out.println("BOOM YOU LOSE!");
-                    break;
-                };
-                if(checkWin()){
-                    renderBoard();
-                    System.out.println("YOU WIN!");
-                    break;
-                };
-            
-        }
+                System.out.println(Color.RED.toString() + "Boom! YOU LOSE!" + Color.RESET);
+                break;
+            }
+
+            if (checkWin()) {
+                renderBoard();
+                System.out.println(Color.GREEN.toString() + "YOU WIN!" + Color.RESET);
+                break;
+            }
+            ;
 
         }
 
-
-    
+    }
 
 }
