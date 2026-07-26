@@ -40,7 +40,6 @@ public class Board {
                 col = (int) (Math.random() * this.size);
             }
             grid[row][col].setMine(true);
-
         }
     }
 
@@ -60,7 +59,6 @@ public class Board {
                             if (grid[nr][nc].isMine()) {
                                 count++;
                             }
-                            ;
                         }
                     }
                 }
