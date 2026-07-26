@@ -1,18 +1,36 @@
-## Getting Started
+# Minesweeper
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+A terminal-based Minesweeper game built in Java. Coloured Unicode rendering, cascading cell reveal, configurable difficulty, and full input validation.
 
-## Folder Structure
+## Features
 
-The workspace contains two folders by default, where:
+- **Three difficulty levels** — Easy (10×10, 10 mines), Medium (16×16, 40 mines), Expert (24×24, 99 mines)
+- **Coloured ANSI output** — numbers gradient from green→orange→red by danger level, row/column labels in grey
+- **Unicode board** — `◼` hidden cells, `·` for revealed empty, `*` for mines
+- **Cascading reveal** — revealing a zero-adjacent cell recursively opens neighbours
+- **Input validation** — non-numeric input caught cleanly, out-of-bounds coordinates rejected with a clear error
+- **Replay loop** — play again prompt at game end without restarting the program
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+## How to run
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+```bash
+# Compile
+javac -d bin src/**/*.java src/*.java
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+# Run
+java -cp bin App
+```
 
-## Dependency Management
+## Project structure
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+```
+src/
+├── App.java                  # Entry point
+├── board/
+│   ├── Board.java            # Grid logic, mine placement, adjacent counts, flood-fill reveal
+│   └── Cell.java             # Cell state (mine, revealed, adjacent count)
+├── minesweeper/
+│   └── Minesweeper.java      # Game loop, rendering, input handling, win/loss checks
+└── util/
+    └── Color.java            # ANSI escape code enum (8 colours including 256-colour orange)
+```
