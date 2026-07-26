@@ -72,6 +72,12 @@ public class Minesweeper {
         return revealedCount == (board.getSize() * board.getSize()) - board.getNumMines();
     }
 
+    private void clearScreen() {
+        for (int i = 0; i < 50; i++) {
+            System.out.println();
+        }
+    }
+
     // method: GAME PLAY
     public void start() {
         boolean playing = true;
@@ -119,6 +125,7 @@ public class Minesweeper {
             this.board = new Board(this.size, this.numMines);
 
             while (true) {
+                clearScreen();
                 renderBoard();
                 System.out.println();
                 System.out.println(Color.GREEN.toString() + "Enter a row number" + Color.RESET);
