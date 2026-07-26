@@ -1,5 +1,6 @@
 package minesweeper;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import board.Board;
@@ -37,12 +38,10 @@ public class Minesweeper {
                         case 2:
                             System.out.print(Color.ORANGE.toString() + count + " " + Color.RESET);
                             break;
-
                         default:
                             System.out.print(Color.RED.toString() + count + " " + Color.RESET);
                             break;
                     }
-
                 }
             }
             if (r < 10) {
@@ -74,9 +73,40 @@ public class Minesweeper {
         while (true) {
             renderBoard();
             System.out.println(Color.GREEN.toString() + "Select row" + Color.RESET);
-            int row = this.scanner.nextInt() - 1;
-            System.out.println(Color.GREEN.toString() + "Select column" + Color.RESET);
-            int col = this.scanner.nextInt() - 1;
+
+            int row;
+
+            while (true) {
+                try {
+                    row = this.scanner.nextInt() - 1;
+                    if (row >= 10 || row < 0) {
+                        System.out.println(Color.RED.toString() + "Enter 1-10." + Color.RESET);
+                        continue;
+                    }
+                    break;
+                } catch (InputMismatchException e) {
+                    this.scanner.nextLine();
+                    System.out.println(Color.RED.toString() + "You need to enter a number" + Color.RESET);
+                }
+            }
+
+            int col;
+
+            while (true) {
+                try {
+                    System.out.println(Color.GREEN.toString() + "Select column" + Color.RESET);
+                    col = this.scanner.nextInt() - 1;
+                    if (col >= 10 || col < 0) {
+                        System.out.println(Color.RED.toString() + "Enter 1-10." + Color.RESET);
+                        continue;
+                    }
+                    break;
+                } catch (InputMismatchException e) {
+                    this.scanner.nextLine();
+                    System.out.println(Color.RED.toString() + "You need to enter a number" + Color.RESET);
+                }
+            }
+
             board.reveal(row, col);
 
             if (board.isMineAt(row, col)) {
