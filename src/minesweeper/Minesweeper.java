@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 import board.Board;
 import board.Cell;
-
+import ui.Welcome;
 import util.Color;
 
 public class Minesweeper {
@@ -82,8 +82,8 @@ public class Minesweeper {
     public void start() {
         boolean playing = true;
         System.out.println();
-        System.out.println(Color.GREEN.toString() + "WELCOME TO MINESWEEPER!" + Color.RESET);
-        System.out.println();
+        System.out.println(Color.GREEN.toString() + "WELCOME TO" + Color.RESET);
+        Welcome.show();
         while (playing) {
             System.out.println(Color.GREEN.toString() + "LET'S PLAY!" + Color.RESET);
             System.out.println();
