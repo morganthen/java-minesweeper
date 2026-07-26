@@ -2,11 +2,18 @@ package board;
 
 public class Board {
 
-    private Cell[][] grid = new Cell[10][10]; // new array of TYPE cell duhhh (no cell object has been created YET!!!)
+    private Cell[][] grid; // new array of TYPE cell duhhh (no cell object has been created YET!!!)
+    private int size;
+    private int numMines;
 
-    public Board() {
-        for (int r = 0; r < 10; r++) {
-            for (int c = 0; c < 10; c++) {
+    public Board(int size, int numMines) {
+
+        this.size = size;
+        this.numMines = numMines;
+        this.grid = new Cell[size][size];
+
+        for (int r = 0; r < this.size; r++) {
+            for (int c = 0; c < this.size; c++) {
                 grid[r][c] = new Cell(false, false, 0);
             }
         }
@@ -16,13 +23,21 @@ public class Board {
         calculateAdjacentMines();
     }
 
+    public int getSize() {
+        return this.size;
+    }
+
+    public int getNumMines() {
+        return this.numMines;
+    }
+
     public void placeMines() {
-        for (int i = 0; i < 10; i++) {
-            int row = (int) (Math.random() * 10);
-            int col = (int) (Math.random() * 10);
+        for (int i = 0; i < this.numMines; i++) {
+            int row = (int) (Math.random() * this.size);
+            int col = (int) (Math.random() * this.size);
             while (grid[row][col].isMine()) {
-                row = (int) (Math.random() * 10);
-                col = (int) (Math.random() * 10);
+                row = (int) (Math.random() * this.size);
+                col = (int) (Math.random() * this.size);
             }
             grid[row][col].setMine(true);
 
@@ -30,8 +45,8 @@ public class Board {
     }
 
     public void calculateAdjacentMines() {
-        for (int r = 0; r < 10; r++) {
-            for (int c = 0; c < 10; c++) {
+        for (int r = 0; r < this.size; r++) {
+            for (int c = 0; c < this.size; c++) {
                 if (grid[r][c].isMine())
                     continue;
                 int count = 0;
@@ -41,7 +56,7 @@ public class Board {
                             continue; // skip self
                         int nr = r + dr;
                         int nc = c + dc;
-                        if (nr >= 0 && nc < 10 && nc >= 0 && nr < 10) {
+                        if (nr >= 0 && nc < this.size && nc >= 0 && nr < this.size) {
                             if (grid[nr][nc].isMine()) {
                                 count++;
                             }
@@ -70,7 +85,7 @@ public class Board {
                         continue;
                     int nr = row + dr;
                     int nc = col + dc;
-                    if (nr >= 0 && nr < 10 && nc >= 0 && nc < 10) {
+                    if (nr >= 0 && nr < this.size && nc >= 0 && nc < this.size) {
                         reveal(nr, nc);
                     }
                 }
