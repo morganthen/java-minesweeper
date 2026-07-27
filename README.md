@@ -17,6 +17,14 @@ A terminal-based Minesweeper game built in Java. Coloured ANSI output, Unicode r
 - **ANSI screen clearing** — `\033[2J\033[H` escape codes instead of println spam
 - **Board greys out on death** — all colours muted on game over, only the mine stays red
 
+## Screenshots
+
+![Welcome screen](public/welcome.png)
+
+![Gameplay](public/gameplay.png)
+
+![Game over](public/lose.png)
+
 ## How to run
 
 ```bash
