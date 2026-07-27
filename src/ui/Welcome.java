@@ -38,6 +38,14 @@ public class Welcome {
                 Color.GREEN + "\\_|  |_/\\___/\\_| \\_/\\____/\\____/  \\/  \\/\\____/\\____/\\_|   \\____/\\_| \\_|"
                         + Color.RESET);
         System.out.println();
+        System.out.println(Color.GREEN.toString() + "LET'S PLAY!" + Color.RESET);
+        System.out.println();
+        System.out.println(Color.GREEN.toString() + "Select difficulty:" + Color.RESET);
+        System.out.println();
+        System.out.println(Color.CYAN + "Easy [1]");
+        System.out.println("Medium [2]");
+        System.out.println("Hard [3]" + Color.RESET);
+        System.out.println();
     }
 
 }

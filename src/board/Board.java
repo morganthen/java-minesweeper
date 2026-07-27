@@ -69,7 +69,7 @@ public class Board {
 
     }
 
-    // recursion doom about to happen here
+    // recursion craziness about to happen here
     public void reveal(int row, int col) {
         if (grid[row][col].isRevealed())
             return;

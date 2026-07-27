@@ -23,7 +23,7 @@ public class Minesweeper {
     }
 
     // methods
-    public void renderBoard(boolean isGameOver) {
+    private void renderBoard(boolean isGameOver) {
         Cell[][] grid = this.board.getGrid();
         for (int r = 0; r < this.size; r++) {
             for (int c = 0; c < this.size; c++) {
@@ -31,7 +31,7 @@ public class Minesweeper {
                 if (!grid[r][c].isRevealed()) {
                     color = isGameOver ? Color.GREY : Color.RESET;
 
-                    System.out.print(color.toString() + "  " + "\u25FC" + Color.RESET);
+                    System.out.print(color + "  " + "\u25FC" + Color.RESET);
                 } else if (grid[r][c].isMine()) {
                     System.out.print(Color.RED + "  *" + Color.RESET);
                 } else {
@@ -42,21 +42,21 @@ public class Minesweeper {
                             break;
                         case 1:
                             color = isGameOver ? Color.GREY : Color.GREEN;
-                            System.out.print(color.toString() + "  " + count + Color.RESET);
+                            System.out.print(color + "  " + count + Color.RESET);
                             break;
                         case 2:
                             color = isGameOver ? Color.GREY : Color.ORANGE;
-                            System.out.print(color.toString() + "  " + count + Color.RESET);
+                            System.out.print(color + "  " + count + Color.RESET);
                             break;
                         default:
                             color = isGameOver ? Color.GREY : Color.RED;
-                            System.out.print(color.toString() + "  " + count + Color.RESET);
+                            System.out.print(color + "  " + count + Color.RESET);
                             break;
                     }
                 }
             }
             if (r < this.size) {
-                System.out.print(Color.GREY.toString() + " | " + (r + 1) + Color.RESET);
+                System.out.print(Color.GREY + " | " + (r + 1) + Color.RESET);
             }
             System.out.println();
         }
@@ -67,7 +67,7 @@ public class Minesweeper {
         System.out.println();
     }
 
-    public boolean checkWin() {
+    private boolean checkWin() {
         int revealedCount = 0;
         Cell[][] grid = this.board.getGrid();
         for (int r = 0; r < board.getSize(); r++) {
@@ -84,25 +84,45 @@ public class Minesweeper {
         System.out.flush();
     }
 
+    private int getCoordinate(String label) {
+        while (true) {
+            try {
+                System.out.println();
+                System.out.println(Color.GREEN + "Enter a " + label + " number" + Color.RESET);
+                System.out.println();
+                int value = this.scanner.nextInt() - 1;
+                if (value >= this.size || value < 0) {
+                    System.out.println(Color.RED + "Enter 1-" + this.size + Color.RESET);
+                    continue;
+                }
+                return value;
+            } catch (InputMismatchException e) {
+                this.scanner.nextLine();
+                System.out.println(Color.RED + "You need to enter a number" + Color.RESET);
+            }
+        }
+    }
+
+    private boolean askReplay() {
+        System.out.println();
+        System.out.println("Play again? Y/N");
+        System.out.println();
+        String choice = this.scanner.next();
+        System.out.println();
+        return choice.equalsIgnoreCase("y");
+    }
+
     // method: GAME PLAY
     public void start() {
         boolean playing = true;
         while (playing) {
             this.clearScreen();
             Welcome.show();
-            System.out.println(Color.GREEN.toString() + "LET'S PLAY!" + Color.RESET);
-            System.out.println();
-            System.out.println(Color.GREEN.toString() + "Select difficulty:" + Color.RESET);
-            System.out.println();
-            System.out.println(Color.CYAN + "Easy [1]");
-            System.out.println("Medium [2]");
-            System.out.println("Hard [3]" + Color.RESET);
-            System.out.println();
             while (true) {
                 try {
                     int level = this.scanner.nextInt();
                     if (level < 1 || level > 3) {
-                        System.out.println(Color.RED.toString() + "Enter a valid level" + Color.RESET);
+                        System.out.println(Color.RED + "Enter a valid level" + Color.RESET);
                         continue;
                     }
                     switch (level) {
@@ -122,54 +142,20 @@ public class Minesweeper {
                     break;
                 } catch (InputMismatchException e) {
                     this.scanner.nextLine();
-                    System.out.println(Color.RED.toString() + "You need to enter a number" + Color.RESET);
+                    System.out.println(Color.RED + "You need to enter a number" + Color.RESET);
                 }
             }
 
+            // creating board for player
             this.board = new Board(this.size, this.numMines);
 
             while (true) {
                 clearScreen();
                 renderBoard(false);
-                System.out.println();
-                System.out.println(Color.GREEN.toString() + "Enter a row number" + Color.RESET);
-                System.out.println();
 
-                int row;
+                int row = this.getCoordinate("row");
 
-                while (true) {
-                    try {
-                        row = this.scanner.nextInt() - 1;
-                        if (row >= this.size || row < 0) {
-                            System.out.println(Color.RED.toString() + "Enter 1-" + this.size + Color.RESET);
-                            continue;
-                        }
-                        break;
-                    } catch (InputMismatchException e) {
-                        this.scanner.nextLine();
-                        System.out.println(Color.RED.toString() + "You need to enter a number" + Color.RESET);
-                    }
-                }
-
-                int col;
-
-                while (true) {
-                    try {
-                        System.out.println();
-                        System.out.println(Color.GREEN.toString() + "Enter a column number" + Color.RESET);
-                        System.out.println();
-                        col = this.scanner.nextInt() - 1;
-                        System.out.println();
-                        if (col >= this.size || col < 0) {
-                            System.out.println(Color.RED.toString() + "Enter 1-" + this.size + Color.RESET);
-                            continue;
-                        }
-                        break;
-                    } catch (InputMismatchException e) {
-                        this.scanner.nextLine();
-                        System.out.println(Color.RED.toString() + "You need to enter a number" + Color.RESET);
-                    }
-                }
+                int col = this.getCoordinate("column");
 
                 board.reveal(row, col);
 
@@ -178,34 +164,21 @@ public class Minesweeper {
                     renderBoard(true);
                     System.out.println();
                     LoseScreen.show();
-                    System.out.println();
-                    System.out.println("Play again? Y/N");
-                    System.out.println();
-                    String choice = this.scanner.next();
-                    System.out.println();
-                    if (choice.equalsIgnoreCase("n")) {
-                        playing = false;
-                    }
+                    playing = askReplay();
                     break;
                 }
 
                 if (checkWin()) {
                     renderBoard(false);
                     System.out.println();
-                    System.out.println(Color.GREEN.toString() + "YOU WIN!" + Color.RESET);
-                    System.out.println();
-                    System.out.println(Color.CYAN + "Play again? Y/N" + Color.RESET);
-                    System.out.println();
-                    String choice = this.scanner.next();
-                    System.out.println();
-                    if (choice.equalsIgnoreCase("n")) {
-                        playing = false;
-                    }
+                    System.out.println(Color.GREEN + "YOU WIN!" + Color.RESET);
+                    playing = askReplay();
                     break;
                 }
                 ;
             }
         }
-        System.out.println("Thanks for playing!");
+        this.clearScreen();
+        System.out.println("Thanks for playing Morgan's Minesweeper Game!");
     }
 }
