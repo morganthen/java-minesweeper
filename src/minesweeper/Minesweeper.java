@@ -112,12 +112,19 @@ public class Minesweeper {
         return choice.equalsIgnoreCase("y");
     }
 
-    private void getDifficulty() {
+    private void menu() {
+        System.out.println();
+        System.out.println(Color.CYAN + "Easy [1]");
+        System.out.println("Medium [2]");
+        System.out.println("Hard [3]");
+        System.out.println();
+        System.out.println(Color.RED + "QUIT [3]" + Color.RESET);
+        System.out.println();
         while (true) {
             try {
                 int level = this.scanner.nextInt();
-                if (level < 1 || level > 3) {
-                    System.out.println(Color.RED + "Enter a valid level" + Color.RESET);
+                if (level < 1 || level > 4) {
+                    System.out.println(Color.RED + "Enter a valid choice [1-4]" + Color.RESET);
                     continue;
                 }
                 switch (level) {
@@ -133,6 +140,10 @@ public class Minesweeper {
                         this.size = 24;
                         this.numMines = 99;
                         break;
+                    case 4:
+                        this.clearScreen();
+                        System.out.println("Thanks for playing Morgan's Minesweeper Game!");
+                        return;
                 }
                 break;
             } catch (InputMismatchException e) {
@@ -148,7 +159,7 @@ public class Minesweeper {
         while (playing) {
             this.clearScreen();
             Welcome.show();
-            this.getDifficulty();
+            this.menu();
             // creating board for player
             this.board = new Board(this.size, this.numMines);
             while (true) {
