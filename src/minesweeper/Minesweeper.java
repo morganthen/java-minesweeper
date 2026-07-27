@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import board.Board;
 import board.Cell;
+import ui.LoseScreen;
 import ui.Welcome;
 import util.Color;
 
@@ -22,12 +23,15 @@ public class Minesweeper {
     }
 
     // methods
-    public void renderBoard() {
+    public void renderBoard(boolean isGameOver) {
         Cell[][] grid = this.board.getGrid();
         for (int r = 0; r < this.size; r++) {
             for (int c = 0; c < this.size; c++) {
+                Color color;
                 if (!grid[r][c].isRevealed()) {
-                    System.out.print("  " + "\u25FC");
+                    color = isGameOver ? Color.GREY : Color.RESET;
+
+                    System.out.print(color.toString() + "  " + "\u25FC" + Color.RESET);
                 } else if (grid[r][c].isMine()) {
                     System.out.print(Color.RED + "  *" + Color.RESET);
                 } else {
@@ -37,13 +41,16 @@ public class Minesweeper {
                             System.out.print(Color.GREY + "  " + "\u00B7" + Color.RESET);
                             break;
                         case 1:
-                            System.out.print(Color.GREEN.toString() + "  " + count + Color.RESET);
+                            color = isGameOver ? Color.GREY : Color.GREEN;
+                            System.out.print(color.toString() + "  " + count + Color.RESET);
                             break;
                         case 2:
-                            System.out.print(Color.ORANGE.toString() + "  " + count + Color.RESET);
+                            color = isGameOver ? Color.GREY : Color.ORANGE;
+                            System.out.print(color.toString() + "  " + count + Color.RESET);
                             break;
                         default:
-                            System.out.print(Color.RED.toString() + "  " + count + Color.RESET);
+                            color = isGameOver ? Color.GREY : Color.RED;
+                            System.out.print(color.toString() + "  " + count + Color.RESET);
                             break;
                     }
                 }
@@ -73,17 +80,16 @@ public class Minesweeper {
     }
 
     private void clearScreen() {
-        for (int i = 0; i < 50; i++) {
-            System.out.println();
-        }
+        System.out.print("\033[2J\033[H");
+        System.out.flush();
     }
 
     // method: GAME PLAY
     public void start() {
         boolean playing = true;
-        System.out.println();
-        Welcome.show();
         while (playing) {
+            this.clearScreen();
+            Welcome.show();
             System.out.println(Color.GREEN.toString() + "LET'S PLAY!" + Color.RESET);
             System.out.println();
             System.out.println(Color.GREEN.toString() + "Select difficulty:" + Color.RESET);
@@ -92,7 +98,6 @@ public class Minesweeper {
             System.out.println("Medium [2]");
             System.out.println("Hard [3]" + Color.RESET);
             System.out.println();
-
             while (true) {
                 try {
                     int level = this.scanner.nextInt();
@@ -125,7 +130,7 @@ public class Minesweeper {
 
             while (true) {
                 clearScreen();
-                renderBoard();
+                renderBoard(false);
                 System.out.println();
                 System.out.println(Color.GREEN.toString() + "Enter a row number" + Color.RESET);
                 System.out.println();
@@ -169,9 +174,10 @@ public class Minesweeper {
                 board.reveal(row, col);
 
                 if (board.isMineAt(row, col)) {
-                    renderBoard();
+                    clearScreen();
+                    renderBoard(true);
                     System.out.println();
-                    System.out.println(Color.RED.toString() + "Boom! YOU LOSE!" + Color.RESET);
+                    LoseScreen.show();
                     System.out.println();
                     System.out.println("Play again? Y/N");
                     System.out.println();
@@ -184,11 +190,11 @@ public class Minesweeper {
                 }
 
                 if (checkWin()) {
-                    renderBoard();
+                    renderBoard(false);
                     System.out.println();
                     System.out.println(Color.GREEN.toString() + "YOU WIN!" + Color.RESET);
                     System.out.println();
-                    System.out.println("Play again? Y/N");
+                    System.out.println(Color.CYAN + "Play again? Y/N" + Color.RESET);
                     System.out.println();
                     String choice = this.scanner.next();
                     System.out.println();
