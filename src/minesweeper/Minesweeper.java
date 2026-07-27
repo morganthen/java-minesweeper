@@ -7,6 +7,7 @@ import board.Board;
 import board.Cell;
 import ui.LoseScreen;
 import ui.Welcome;
+import ui.WinScreen;
 import util.Color;
 
 public class Minesweeper {
@@ -112,7 +113,7 @@ public class Minesweeper {
         return choice.equalsIgnoreCase("y");
     }
 
-    // method: GAME PLAY
+    // GAME PLAY
     public void start() {
         boolean playing = true;
         while (playing) {
@@ -152,13 +153,9 @@ public class Minesweeper {
             while (true) {
                 clearScreen();
                 renderBoard(false);
-
                 int row = this.getCoordinate("row");
-
                 int col = this.getCoordinate("column");
-
                 board.reveal(row, col);
-
                 if (board.isMineAt(row, col)) {
                     clearScreen();
                     renderBoard(true);
@@ -167,11 +164,11 @@ public class Minesweeper {
                     playing = askReplay();
                     break;
                 }
-
                 if (checkWin()) {
+                    clearScreen();
                     renderBoard(false);
                     System.out.println();
-                    System.out.println(Color.GREEN + "YOU WIN!" + Color.RESET);
+                    WinScreen.show();
                     playing = askReplay();
                     break;
                 }
