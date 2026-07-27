@@ -29,7 +29,10 @@ public class Minesweeper {
         for (int r = 0; r < this.size; r++) {
             for (int c = 0; c < this.size; c++) {
                 Color color;
-                if (!grid[r][c].isRevealed()) {
+                if (!grid[r][c].isRevealed() && grid[r][c].isFlagged()) {
+                    color = isGameOver ? Color.GREY : Color.ORANGE;
+                    System.out.print(color + "  " + "!" + Color.RESET);
+                } else if (!grid[r][c].isRevealed()) {
                     color = isGameOver ? Color.GREY : Color.RESET;
                     System.out.print(color + "  " + "\u25FC" + Color.RESET);
                 } else if (grid[r][c].isMine()) {
@@ -112,13 +115,13 @@ public class Minesweeper {
         return choice.equalsIgnoreCase("y");
     }
 
-    private void menu() {
+    private boolean menu() {
         System.out.println();
         System.out.println(Color.CYAN + "Easy [1]");
         System.out.println("Medium [2]");
         System.out.println("Hard [3]");
         System.out.println();
-        System.out.println(Color.RED + "QUIT [3]" + Color.RESET);
+        System.out.println(Color.RED + "QUIT [4]" + Color.RESET);
         System.out.println();
         while (true) {
             try {
@@ -143,14 +146,17 @@ public class Minesweeper {
                     case 4:
                         this.clearScreen();
                         System.out.println("Thanks for playing Morgan's Minesweeper Game!");
-                        return;
+                        return false;
                 }
                 break;
             } catch (InputMismatchException e) {
                 this.scanner.nextLine();
+                this.clearScreen(); // flag
+                renderBoard(false); // flag
                 System.out.println(Color.RED + "You need to enter a number" + Color.RESET);
             }
         }
+        return true;
     }
 
     // GAME PLAY
@@ -159,7 +165,8 @@ public class Minesweeper {
         while (playing) {
             this.clearScreen();
             Welcome.show();
-            this.menu();
+            if (!this.menu())
+                break;
             // creating board for player
             this.board = new Board(this.size, this.numMines);
             while (true) {
@@ -167,7 +174,17 @@ public class Minesweeper {
                 renderBoard(false);
                 int row = this.getCoordinate("row");
                 int col = this.getCoordinate("column");
+                System.out.println();
+                System.out.println(Color.GREEN + "Reveal [R] or Flag [F]" + Color.RESET);
+                System.out.println();
+                String action = scanner.next().toLowerCase();
+                if (action.equals("f")) {
+                    board.toggleFlag(row, col);
+                    continue;
+                }
+
                 board.reveal(row, col);
+
                 if (board.isMineAt(row, col)) {
                     clearScreen();
                     renderBoard(true);
@@ -184,6 +201,7 @@ public class Minesweeper {
                     playing = askReplay();
                     break;
                 }
+
             }
         }
         this.clearScreen();

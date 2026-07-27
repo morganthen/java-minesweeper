@@ -95,6 +95,13 @@ public class Board {
         return grid[row][col].isMine();
     }
 
+    public void toggleFlag(int row, int col) {
+        Cell cell = grid[row][col];
+        if (cell.isRevealed())
+            return;
+        cell.setFlagged();
+    }
+
     public Cell[][] getGrid() {
         return grid;
     }
