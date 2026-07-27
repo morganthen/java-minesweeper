@@ -31,7 +31,6 @@ public class Minesweeper {
                 Color color;
                 if (!grid[r][c].isRevealed()) {
                     color = isGameOver ? Color.GREY : Color.RESET;
-
                     System.out.print(color + "  " + "\u25FC" + Color.RESET);
                 } else if (grid[r][c].isMine()) {
                     System.out.print(Color.RED + "  *" + Color.RESET);
@@ -113,43 +112,45 @@ public class Minesweeper {
         return choice.equalsIgnoreCase("y");
     }
 
+    private void getDifficulty() {
+        while (true) {
+            try {
+                int level = this.scanner.nextInt();
+                if (level < 1 || level > 3) {
+                    System.out.println(Color.RED + "Enter a valid level" + Color.RESET);
+                    continue;
+                }
+                switch (level) {
+                    case 1:
+                        this.size = 10;
+                        this.numMines = 10;
+                        break;
+                    case 2:
+                        this.size = 16;
+                        this.numMines = 40;
+                        break;
+                    case 3:
+                        this.size = 24;
+                        this.numMines = 99;
+                        break;
+                }
+                break;
+            } catch (InputMismatchException e) {
+                this.scanner.nextLine();
+                System.out.println(Color.RED + "You need to enter a number" + Color.RESET);
+            }
+        }
+    }
+
     // GAME PLAY
     public void start() {
         boolean playing = true;
         while (playing) {
             this.clearScreen();
             Welcome.show();
-            while (true) {
-                try {
-                    int level = this.scanner.nextInt();
-                    if (level < 1 || level > 3) {
-                        System.out.println(Color.RED + "Enter a valid level" + Color.RESET);
-                        continue;
-                    }
-                    switch (level) {
-                        case 1:
-                            this.size = 10;
-                            this.numMines = 10;
-                            break;
-                        case 2:
-                            this.size = 16;
-                            this.numMines = 40;
-                            break;
-                        case 3:
-                            this.size = 24;
-                            this.numMines = 99;
-                            break;
-                    }
-                    break;
-                } catch (InputMismatchException e) {
-                    this.scanner.nextLine();
-                    System.out.println(Color.RED + "You need to enter a number" + Color.RESET);
-                }
-            }
-
+            this.getDifficulty();
             // creating board for player
             this.board = new Board(this.size, this.numMines);
-
             while (true) {
                 clearScreen();
                 renderBoard(false);
@@ -172,7 +173,6 @@ public class Minesweeper {
                     playing = askReplay();
                     break;
                 }
-                ;
             }
         }
         this.clearScreen();
