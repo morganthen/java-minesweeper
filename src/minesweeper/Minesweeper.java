@@ -180,15 +180,26 @@ public class Minesweeper {
                 renderBoard(false, -1, -1);
                 int row = this.getCoordinate("row");
                 int col = this.getCoordinate("column");
+                System.out.println();
+                if (this.board.getGrid()[row][col].isRevealed()) {
+                    System.out.println(Color.YELLOW + "Cell already revealed" + Color.GREEN + "\n[ENTER] "
+                            + Color.YELLOW + "to select again" + Color.RESET);
+                    System.out.println();
+                    scanner.nextLine();
+                    scanner.nextLine();
+                    continue;
+                }
                 clearScreen();
                 renderBoard(false, row, col);
                 System.out.println();
-                System.out.println(Color.GREEN + "Reveal [R] or Flag [F]" + Color.RESET);
-                System.out.println();
-                String action = scanner.next();
-                if (action.equals("f")) {
-                    board.toggleFlag(row, col);
-                    continue;
+                if (!this.board.getGrid()[row][col].isRevealed()) {
+                    System.out.println(Color.GREEN + "Reveal [R] or Flag [F]" + Color.RESET);
+                    System.out.println();
+                    String action = scanner.next();
+                    if (action.equals("f")) {
+                        board.toggleFlag(row, col);
+                        continue;
+                    }
                 }
                 board.reveal(row, col);
                 if (board.isMineAt(row, col)) {

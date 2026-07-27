@@ -17,7 +17,7 @@ public class continueMessages {
                 "You're doing great sweetie. - Kris Jenner",
         };
         System.out.print(
-                Color.GREEN + continueMsgs[(int) (Math.random() * continueMsgs.length)] + "[ENTER]" + Color.RESET);
+                Color.GREEN + continueMsgs[(int) (Math.random() * continueMsgs.length)] + "\n[ENTER]" + Color.RESET);
     }
 
 }
